@@ -9,7 +9,8 @@
         content="Everest Periodical Subscription Agency - Your trusted partner for academic journals and periodicals subscription services. Serving Arts and Science colleges across India for 9+ years.">
     <!-- SECURITY: Content Security Policy - restricts resource loading to trusted origins -->
     <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://wa.me; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self';">
+        content="default-src 'self' https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://wa.me https://api.emailjs.com; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -347,46 +348,22 @@
             overflow: hidden;
         }
 
-        /* Glowing mesh orbs */
-        .hero::before,
-        .hero::after {
-            content: '';
+        /* Wavy Background Native Canvas */
+        .hero {
+            overflow: hidden;
+            /* Ensure canvas doesn't break bleed */
+        }
+
+        .wavy-bg-canvas {
             position: absolute;
-            border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.6;
+            inset: 0;
             z-index: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
-            animation: pulseGlow 8s infinite alternate;
-        }
-
-        .hero::before {
-            top: -10%;
-            left: -10%;
-            width: 50vw;
-            height: 50vw;
-            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
-        }
-
-        .hero::after {
-            bottom: -20%;
-            right: -10%;
-            width: 60vw;
-            height: 60vw;
-            background: radial-gradient(circle, rgba(237, 28, 35, 0.15) 0%, transparent 70%);
-            animation-delay: 4s;
-        }
-
-        @keyframes pulseGlow {
-            0% {
-                transform: scale(1);
-                opacity: 0.5;
-            }
-
-            100% {
-                transform: scale(1.1);
-                opacity: 0.8;
-            }
+            /* Support for Safari blur as noted by the React component */
+            filter: blur(10px);
+            -webkit-filter: blur(10px);
         }
 
         #hero-canvas {
@@ -1070,6 +1047,7 @@
         }
 
         /* Responsive */
+        /* Responsive Optimization */
         @media (max-width: 992px) {
             .nav-links {
                 display: none;
@@ -1079,9 +1057,10 @@
                 right: 0;
                 background: var(--bg-card);
                 flex-direction: column;
-                padding: 20px;
-                box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+                padding: 24px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
                 gap: 16px;
+                border-bottom: 2px solid var(--primary);
             }
 
             .nav-links.active {
@@ -1093,52 +1072,91 @@
             }
 
             .hero h1 {
-                font-size: 2.4rem;
-            }
-
-            .hero-company {
-                font-size: 0.95rem;
-                letter-spacing: 2px;
-                padding: 6px 16px;
-            }
-
-            .stat-number {
-                font-size: 2.2rem;
+                font-size: 2.8rem;
             }
 
             .stat-item {
-                padding: 16px 24px;
-                min-width: 140px;
+                min-width: 160px;
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            .services-grid,
+            .about-highlights,
+            .features-grid {
+                grid-template-columns: 1fr;
             }
 
-            .hero-tagline {
-                font-size: 1.1rem;
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero-stats {
+                gap: 16px;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .stat-item {
+                width: 100%;
+                max-width: 320px;
+            }
+
+            .hero-buttons {
+                flex-direction: column !important;
+                width: 100%;
+                max-width: 320px;
+                margin: 0 auto;
+                gap: 12px;
+            }
+
+            .hero-buttons .btn {
+                width: 100%;
+                justify-content: center;
+                padding: 14px 24px;
             }
         }
 
         @media (max-width: 480px) {
+            .hero {
+                padding-top: 120px;
+            }
+
             .hero h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
+                margin-top: 12px;
             }
 
             section {
-                padding: 64px 0;
+                padding: 50px 0;
             }
 
             .section-header h2 {
-                font-size: 1.7rem;
+                font-size: 1.5rem;
             }
 
-            .enquiry-form {
-                padding: 24px 20px;
+            .hero-company {
+                font-size: 0.85rem;
+                padding: 6px 16px;
+                width: fit-content;
+                margin: 0 auto;
             }
 
-            .stat-item {
-                padding: 12px 20px;
+            /* Prevent floating buttons from covering text */
+            .container {
+                padding: 0 20px;
             }
 
-            .stat-number {
-                font-size: 2rem;
+            .floating-container {
+                bottom: 20px;
+                right: 12px;
+            }
+
+            .float-btn {
+                width: 44px;
+                height: 44px;
             }
         }
     </style>
@@ -1168,9 +1186,6 @@
         </symbol>
     </svg>
 
-    <!-- Animated Particles Background -->
-    <div class="bg-particles" id="particles"></div>
-
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="container">
@@ -1197,7 +1212,8 @@
 
     <!-- Hero Section -->
     <section class="hero" id="hero">
-        <canvas id="hero-canvas"></canvas>
+        <!-- Animated Wavy Background -->
+        <canvas id="wavy-canvas" class="wavy-bg-canvas"></canvas>
         <div class="hero-content fade-in-up">
             <!-- Large Hero Logo -->
             <svg class="hero-logo-large" aria-hidden="true">
@@ -1241,11 +1257,14 @@
             <div class="about-content">
                 <div class="about-text">
                     <h3>Empowering Institutions Since 2017</h3>
-                    <p>Everest Periodical Subscription Agency (EPSA) is a leading subscription agency based in Chennai,
+                    <p>Everest Periodical Subscription Agency (EPSA) is a leading subscription agency based in
+                        Chennai,
                         India, dedicated to providing premium academic journals and periodicals to Arts and Science
                         colleges, universities, and research institutions across the country.</p>
-                    <p>With over 9 years of unwavering trust and performance, we have built strong relationships with
-                        150+ institutions, offering a curated catalogue of 300+ journals spanning every major academic
+                    <p>With over 9 years of unwavering trust and performance, we have built strong relationships
+                        with
+                        150+ institutions, offering a curated catalogue of 300+ journals spanning every major
+                        academic
                         discipline — from Tamil and English literature to cutting-edge Computer Science and
                         Biotechnology research.</p>
                     <p>We partner with renowned publishers to provide SCOPUS-indexed, UGC CARE-listed, and other
@@ -1285,7 +1304,8 @@
                 <div class="service-card">
                     <div class="service-icon">🔬</div>
                     <h3>Science</h3>
-                    <p>Physics, Chemistry, Biology, Zoology, Botany, Microbiology, Biochemistry & Environmental Science
+                    <p>Physics, Chemistry, Biology, Zoology, Botany, Microbiology, Biochemistry & Environmental
+                        Science
                     </p>
                 </div>
                 <div class="service-card">
@@ -1306,17 +1326,20 @@
                 <div class="service-card">
                     <div class="service-icon">📐</div>
                     <h3>Mathematics</h3>
-                    <p>Applied Mathematics, Statistics, Probability, Cryptography, Geometric Theories & Optimization</p>
+                    <p>Applied Mathematics, Statistics, Probability, Cryptography, Geometric Theories & Optimization
+                    </p>
                 </div>
                 <div class="service-card">
                     <div class="service-icon">🧬</div>
                     <h3>Life Sciences</h3>
-                    <p>Biotechnology, Agricultural Research, Food Science, Nutrition, Plant Science & Mental Health</p>
+                    <p>Biotechnology, Agricultural Research, Food Science, Nutrition, Plant Science & Mental Health
+                    </p>
                 </div>
                 <div class="service-card">
                     <div class="service-icon">🎓</div>
                     <h3>Education & Social Sciences</h3>
-                    <p>Physical Education, Special Education, Psychology, Sociology, Philosophy & Library Science</p>
+                    <p>Physical Education, Special Education, Psychology, Sociology, Philosophy & Library Science
+                    </p>
                 </div>
                 <div class="service-card">
                     <div class="service-icon">🌍</div>
@@ -1375,7 +1398,8 @@
                         Do you offer discounts for bulk orders? <span class="faq-icon">+</span>
                     </div>
                     <div class="faq-answer">
-                        Yes! We offer exclusive discounts for colleges and institutions subscribing to multiple journals
+                        Yes! We offer exclusive discounts for colleges and institutions subscribing to multiple
+                        journals
                         or packages.
                     </div>
                 </div>
@@ -1397,17 +1421,16 @@
             <div class="section-header">
                 <h2>Get a Quote</h2>
             </div>
-            <form class="enquiry-form" onsubmit="event.preventDefault(); sendEnquiry();">
+            <form class="enquiry-form" id="enquiry-form" onsubmit="event.preventDefault(); sendEnquiry();">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="name">Contact Person</label>
-                        <!-- SECURITY: maxlength prevents oversized input; pattern allows letters, spaces, dots -->
-                        <input type="text" id="name" class="form-control" placeholder="Your Name" required
+                        <input type="text" id="name" name="user_name" class="form-control" placeholder="Your Name" required
                             maxlength="100" minlength="2" pattern="[A-Za-z .'-]+" autocomplete="name">
                     </div>
                     <div class="form-group">
                         <label for="designation">Designation</label>
-                        <input type="text" id="designation" class="form-control"
+                        <input type="text" id="designation" name="user_designation" class="form-control"
                             placeholder="e.g. Librarian / Principal" required maxlength="100" minlength="2">
                     </div>
                 </div>
@@ -1415,12 +1438,12 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="institution">Institution Name</label>
-                        <input type="text" id="institution" class="form-control" placeholder="College / School Name"
+                        <input type="text" id="institution" name="user_institution" class="form-control" placeholder="College / School Name"
                             required maxlength="200" minlength="2">
                     </div>
                     <div class="form-group">
                         <label for="department">Department</label>
-                        <input type="text" id="department" class="form-control"
+                        <input type="text" id="department" name="user_department" class="form-control"
                             placeholder="e.g. Library / Science Dept" maxlength="100">
                     </div>
                 </div>
@@ -1428,33 +1451,33 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="mobile">Mobile Number</label>
-                        <!-- SECURITY: pattern restricts to valid phone formats -->
-                        <input type="tel" id="mobile" class="form-control" placeholder="+91 XXXXX XXXXX" required
+                        <input type="tel" id="mobile" name="user_mobile" class="form-control" placeholder="+91 XXXXX XXXXX" required
                             maxlength="15" minlength="10" pattern="[+]?[0-9 -]{10,15}">
                     </div>
                     <div class="form-group">
                         <label for="email">Email ID</label>
-                        <!-- SECURITY: type="email" provides built-in format validation -->
-                        <input type="email" id="email" class="form-control" placeholder="name@college.edu" required
+                        <input type="email" id="email" name="user_email" class="form-control" placeholder="name@college.edu" required
                             maxlength="254" autocomplete="email">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="address">Institution Address</label>
-                    <textarea id="address" class="form-control" rows="2" placeholder="For sending catalog/quotation"
+                    <textarea id="address" name="user_address" class="form-control" rows="2" placeholder="For sending catalog/quotation"
                         maxlength="500"></textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="requirements">Subscription Requirements</label>
-                    <textarea id="requirements" class="form-control" rows="4"
+                    <textarea id="requirements" name="user_requirements" class="form-control" rows="4"
                         placeholder="List of journals or specific subjects..." maxlength="2000"></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
-                    <span style="font-size: 1.1rem;">📩</span> Send Enquiry via WhatsApp
+                <button type="submit" id="submit-btn" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                    <span id="btn-icon" style="font-size: 1.1rem; margin-right: 8px;">📩</span> 
+                    <span id="btn-text">Submit Enquiry</span>
                 </button>
+                <div id="form-feedback" style="margin-top: 16px; text-align: center; display: none; padding: 10px; border-radius: 8px; font-weight: 500;"></div>
             </form>
         </div>
     </section>
@@ -1470,7 +1493,8 @@
             <h3>Everest Periodical Subscription Agency</h3>
             <p style="color: var(--accent-light); font-weight: 500; margin-bottom: 16px;">"9 Years of Trust &
                 Performance"</p>
-            <p><strong>Head Office:</strong> No.8, Brindavan Flat, 1st Floor, Kannan Nagar, 1st Main Road, Madipakkam,
+            <p><strong>Head Office:</strong> No.8, Brindavan Flat, 1st Floor, Kannan Nagar, 1st Main Road,
+                Madipakkam,
                 Chennai - 600 091</p>
             <p><strong>Branch Office:</strong> No. 1411, 4th Floor, 1st Block, Arun Exello, Sankara Apartment,
                 Kannapuram Main Road, Kolathur Village, Mambakkam - 600 127</p>
@@ -1496,90 +1520,6 @@
 
     <!-- Scripts -->
     <script>
-        // Interactive Physics Particles
-        const canvas = document.getElementById('hero-canvas');
-        const ctx = canvas.getContext('2d');
-        let particlesArray;
-
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        class Particle {
-            constructor(x, y, directionX, directionY, size, color) {
-                this.x = x;
-                this.y = y;
-                this.directionX = directionX;
-                this.directionY = directionY;
-                this.size = size;
-                this.color = color;
-            }
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-                ctx.fillStyle = this.color;
-                ctx.fill();
-            }
-            update() {
-                if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
-                if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
-                this.x += this.directionX;
-                this.y += this.directionY;
-                this.draw();
-            }
-        }
-
-        function init() {
-            particlesArray = [];
-            let numberOfParticles = (canvas.height * canvas.width) / 12000;
-            for (let i = 0; i < numberOfParticles; i++) {
-                let size = (Math.random() * 2) + 0.5;
-                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
-                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
-                let directionX = (Math.random() * 0.3) - 0.15;
-                let directionY = (Math.random() * 0.3) - 0.15;
-                let color = 'rgba(225, 243, 253, 0.25)';
-
-                particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
-            }
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            ctx.clearRect(0, 0, innerWidth, innerHeight);
-            for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].update();
-            }
-            connect();
-        }
-
-        function connect() {
-            let opacityValue = 1;
-            for (let a = 0; a < particlesArray.length; a++) {
-                for (let b = a; b < particlesArray.length; b++) {
-                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) +
-                        ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
-                    if (distance < (canvas.width / 7) * (canvas.height / 7)) {
-                        opacityValue = 1 - (distance / 20000);
-                        ctx.strokeStyle = 'rgba(225, 243, 253,' + (opacityValue * 0.15) + ')';
-                        ctx.lineWidth = 0.8;
-                        ctx.beginPath();
-                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-        }
-
-        window.addEventListener('resize', () => {
-            canvas.width = innerWidth;
-            canvas.height = innerHeight;
-            init();
-        });
-
-        // Initialize Particles
-        init();
-        animate();
 
         // Theme Toggle
         function toggleTheme() {
@@ -1639,80 +1579,58 @@
 
         stats.forEach(stat => observer.observe(stat));
 
-        // SECURITY: Secure enquiry handler with input validation, sanitization & rate limiting
+        // Initialize EmailJS
+        (function () {
+            // Replace with your real Public Key from EmailJS dashboard
+            emailjs.init("hBERiuhw5jH98XPOq");
+        })();
+
+        // Enquiry handler using EmailJS
         let _lastSubmitTime = 0;
 
-        function sendEnquiry() {
+        async function sendEnquiry() {
             const now = Date.now();
             if (now - _lastSubmitTime < 10000) {
                 alert('Please wait a few seconds before submitting again.');
                 return;
             }
 
-            function sanitize(str) {
-                return str.replace(/<[^>]*>/g, '').trim();
+            const form = document.getElementById('enquiry-form');
+            const btn = document.getElementById('submit-btn');
+            const btnText = document.getElementById('btn-text');
+            const btnIcon = document.getElementById('btn-icon');
+            const feedback = document.getElementById('form-feedback');
+
+            // Set loading state
+            btn.disabled = true;
+            btnText.innerText = 'Sending...';
+            btnIcon.innerText = '⏳';
+            feedback.style.display = 'none';
+
+            try {
+                // IMPORTANT: Replace with your actual Service ID and Template ID
+                await emailjs.sendForm('service_z5yf78h', 'template_2y67xgp', form);
+
+                // Success state
+                feedback.innerText = '✅ Enquiry Sent Successfully! We will contact you soon.';
+                feedback.style.backgroundColor = 'rgba(76, 175, 80, 0.1)';
+                feedback.style.color = '#4caf50';
+                feedback.style.display = 'block';
+                form.reset();
+                _lastSubmitTime = now;
+
+            } catch (error) {
+                console.error('EmailJS Error:', error);
+                feedback.innerText = '❌ Failed to send. Please try again or call us directly.';
+                feedback.style.backgroundColor = 'rgba(244, 67, 54, 0.1)';
+                feedback.style.color = '#f44336';
+                feedback.style.display = 'block';
+            } finally {
+                // Restore button
+                btn.disabled = false;
+                btnText.innerText = 'Submit Enquiry';
+                btnIcon.innerText = '📩';
             }
-
-            const name = sanitize(document.getElementById('name').value);
-            const designation = sanitize(document.getElementById('designation').value);
-            const institution = sanitize(document.getElementById('institution').value);
-            const department = sanitize(document.getElementById('department').value);
-            const mobile = sanitize(document.getElementById('mobile').value);
-            const email = sanitize(document.getElementById('email').value);
-            const address = sanitize(document.getElementById('address').value);
-            const requirements = sanitize(document.getElementById('requirements').value);
-
-            const limits = [
-                { field: 'Name', value: name, max: 100, required: true },
-                { field: 'Designation', value: designation, max: 100, required: true },
-                { field: 'Institution', value: institution, max: 200, required: true },
-                { field: 'Department', value: department, max: 100, required: false },
-                { field: 'Mobile', value: mobile, max: 15, required: true },
-                { field: 'Email', value: email, max: 254, required: true },
-                { field: 'Address', value: address, max: 500, required: false },
-                { field: 'Requirements', value: requirements, max: 2000, required: false }
-            ];
-
-            for (const item of limits) {
-                if (item.required && item.value.length === 0) {
-                    alert(`${item.field} is required.`);
-                    return;
-                }
-                if (item.value.length > item.max) {
-                    alert(`${item.field} must be ${item.max} characters or fewer.`);
-                    return;
-                }
-            }
-
-            if (!/^[+]?[0-9 \-]{10,15}$/.test(mobile)) {
-                alert('Please enter a valid mobile number.');
-                return;
-            }
-
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                alert('Please enter a valid email address.');
-                return;
-            }
-
-            const message = [
-                '*New Subscription Enquiry from Website*',
-                '',
-                `Name: ${name}`,
-                `Designation: ${designation}`,
-                `Institution: ${institution}`,
-                `Department: ${department || 'Not specified'}`,
-                `Mobile: ${mobile}`,
-                `Email: ${email}`,
-                `Address: ${address || 'Not specified'}`,
-                '',
-                `Requirements: ${requirements || 'Not specified'}`
-            ].join('\n');
-
-            const whatsappNumber = '919940089068';
-            const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-            window.open(url, '_blank', 'noopener,noreferrer');
-
-            _lastSubmitTime = now;
         }
 
         // Scroll progress
@@ -1776,6 +1694,74 @@
         }
 
         applyLanguage(localStorage.getItem('lang') || 'en');
+    </script>
+
+    <!-- Wavy Background Native Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const canvas = document.getElementById("wavy-canvas");
+            if (!canvas || typeof SimplexNoise === 'undefined') return;
+
+            const ctx = canvas.getContext("2d");
+            const noise = new SimplexNoise();
+
+            let w, h, nt, i, x;
+            let animationId;
+            let speed = 0.002; // "fast"
+            let blur = 10;
+            let waveWidth = 50;
+            let waveOpacity = 0.8; // Increased from 0.5
+            let backgroundFill = "rgba(11, 15, 25, 1)"; // Hero background #0b0f19
+
+            // Catalogue-inspired colors - brighter variants
+            const waveColors = [
+                "#38bdf8", // Blue
+                "#818cf8", // Indigo
+                "#ff4d4d", // Brighter Red
+                "#f0abfc", // Brighter Pink
+                "#22d3ee"  // Cyan
+            ];
+
+            const init = () => {
+                w = ctx.canvas.width = window.innerWidth;
+                h = ctx.canvas.height = window.innerHeight;
+                nt = 0;
+
+                window.addEventListener('resize', () => {
+                    w = ctx.canvas.width = window.innerWidth;
+                    h = ctx.canvas.height = window.innerHeight;
+                });
+                render();
+            };
+
+            const drawWave = (n) => {
+                nt += speed;
+                for (i = 0; i < n; i++) {
+                    ctx.beginPath();
+                    ctx.lineWidth = waveWidth;
+                    ctx.strokeStyle = waveColors[i % waveColors.length];
+                    for (x = 0; x < w; x += 5) {
+                        var y = noise.noise3D(x / 800, 0.3 * i, nt) * 100;
+                        // Adjust for height, centering at 50%
+                        ctx.lineTo(x, y + h * 0.5);
+                    }
+                    ctx.stroke();
+                    ctx.closePath();
+                }
+            };
+
+            const render = () => {
+                ctx.clearRect(0, 0, w, h);
+                ctx.fillStyle = backgroundFill;
+                ctx.globalAlpha = waveOpacity;
+                ctx.fillRect(0, 0, w, h);
+                drawWave(5);
+                animationId = requestAnimationFrame(render);
+            };
+
+            init();
+        });
     </script>
 </body>
 
