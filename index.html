@@ -1473,6 +1473,7 @@
                         placeholder="List of journals or specific subjects..." maxlength="2000"></textarea>
                 </div>
 
+                <input type="hidden" name="to_email" value="everestch91@gmail.com">
                 <button type="submit" id="submit-btn" class="btn btn-primary" style="width: 100%; justify-content: center;">
                     <span id="btn-icon" style="font-size: 1.1rem; margin-right: 8px;">📩</span> 
                     <span id="btn-text">Submit Enquiry</span>
@@ -1582,7 +1583,7 @@
         // Initialize EmailJS
         (function () {
             // Replace with your real Public Key from EmailJS dashboard
-            emailjs.init("hBERiuhw5jH98XPOq");
+            emailjs.init("7sIadblXIwLmFCQpU");
         })();
 
         // Enquiry handler using EmailJS
@@ -1609,7 +1610,7 @@
 
             try {
                 // IMPORTANT: Replace with your actual Service ID and Template ID
-                await emailjs.sendForm('service_z5yf78h', 'template_2y67xgp', form);
+                await emailjs.sendForm('service_jutmkxp', 'template_w32r84g', form);
 
                 // Success state
                 feedback.innerText = '✅ Enquiry Sent Successfully! We will contact you soon.';
