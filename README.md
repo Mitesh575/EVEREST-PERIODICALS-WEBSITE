@@ -1,5 +1,2 @@
-Everest Periodicals
-
-Academic journal subscription agency for colleges.
-
+Everest Periodicals official website:
 https://everestperiodicals.com
