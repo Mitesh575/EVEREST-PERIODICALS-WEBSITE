@@ -1498,6 +1498,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
             const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
             html.setAttribute('data-theme', newTheme);
             themeIcon.innerText = newTheme === 'light' ? '\u263E' : '\u2600';
+            themeIcon.setAttribute('aria-label',newTheme==='light'?'Switch to dark theme':'Switch to light theme');
             localStorage.setItem('theme', newTheme);
         }
 
@@ -1505,6 +1506,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
         if (localStorage.getItem('theme') === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
             document.getElementById('themeIcon').innerText = '\u2600';
+            document.getElementById('themeIcon').setAttribute('aria-label','Switch to light theme');
         } else {
             document.getElementById('themeIcon').innerText = '\u263E';
         }
@@ -1513,17 +1515,23 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
         document.querySelectorAll('.faq-question').forEach(item => {
             item.addEventListener('click', () => {
                 const parent = item.parentElement;
-                parent.classList.toggle('active');
+                const expanded = item.getAttribute('aria-expanded') !== 'true';
+                item.setAttribute('aria-expanded', String(expanded));
+                parent.classList.toggle('active', expanded);
+                document.getElementById(item.getAttribute('aria-controls')).hidden = !expanded;
             });
         });
 
         // Mobile Menu
         function toggleMenu() {
-            document.getElementById('navLinks').classList.toggle('active');
+            const links = document.getElementById('navLinks');
+            const expanded = !links.classList.contains('active');
+            links.classList.toggle('active',expanded);
+            document.querySelector('.mobile-menu-btn').setAttribute('aria-expanded', String(expanded));
         }
 
-        // Number Counter Animation
-        const stats = document.querySelectorAll('.stat-number');
+        // Number Counter Animation (non-numeric facts are now rendered statically)
+        const stats = document.querySelectorAll('.stat-number[data-target]');
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1575,26 +1583,21 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
             btn.disabled = true;
             btnText.innerText = 'Sending...';
             btnIcon.innerText = '⏳';
-            feedback.style.display = 'none';
+            feedback.hidden = true; feedback.className = 'form-feedback';
 
             try {
                 // IMPORTANT: Replace with your actual Service ID and Template ID
+                if (!window.emailjs) throw new Error('Email service unavailable');
                 await emailjs.sendForm('service_jutmkxp', 'template_w32r84g', form);
 
                 // Success state
-                feedback.innerText = '✅ Enquiry Sent Successfully! We will contact you soon.';
-                feedback.style.backgroundColor = 'rgba(76, 175, 80, 0.1)';
-                feedback.style.color = '#4caf50';
-                feedback.style.display = 'block';
+                feedback.textContent = 'Enquiry sent to the email service. Please retain a copy of your requirements.'; feedback.className = 'form-feedback success'; feedback.hidden = false;
                 form.reset();
                 _lastSubmitTime = now;
 
             } catch (error) {
                 console.error('EmailJS Error:', error);
-                feedback.innerText = '❌ Failed to send. Please try again or call us directly.';
-                feedback.style.backgroundColor = 'rgba(244, 67, 54, 0.1)';
-                feedback.style.color = '#f44336';
-                feedback.style.display = 'block';
+                feedback.textContent = 'Enquiry not sent. Please contact everestch91@gmail.com directly.'; feedback.className = 'form-feedback error'; feedback.hidden = false;
             } finally {
                 // Restore button
                 btn.disabled = false;
@@ -1616,6 +1619,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
         document.querySelectorAll('#navLinks a').forEach(link => {
             link.addEventListener('click', () => {
                 document.getElementById('navLinks').classList.remove('active');
+                document.querySelector('.mobile-menu-btn').setAttribute('aria-expanded','false');
             });
         });
 
@@ -1637,14 +1641,14 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
             en: {
                 heroCompany: 'Everest Periodical Subscription Agency',
                 heroTitle: 'Empowering Academic Excellence',
-                heroTagline: 'Providing 250+ premium journals to Arts, Science and Engineering colleges across India. Trusted partner for over 9 years.',
-                langButton: 'EN'
+                heroTagline: 'Academic journal subscription support for colleges, universities and research libraries across India.',
+                langButton: 'TA'
             },
             ta: {
                 heroCompany: 'Everest Periodical Subscription Agency',
-                heroTitle: 'Kalvi thiranai uyarthukirom',
-                heroTagline: 'Indiavin Arts, Science and Engineering colleges-kku 250+ premium journals. 9+ andugalaga nambakamana sevai.',
-                langButton: 'TA'
+                heroTitle: 'கல்வித் திறனை மேம்படுத்துகிறோம்',
+                heroTagline: 'இந்தியா முழுவதும் உள்ள கல்லூரிகள், பல்கலைக்கழகங்கள் மற்றும் ஆராய்ச்சி நூலகங்களுக்கான கல்வி இதழ் சந்தா சேவை.',
+                langButton: 'EN'
             }
         };
 
@@ -1654,6 +1658,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
             document.getElementById('heroTitle').textContent = t.heroTitle;
             document.getElementById('heroTagline').textContent = t.heroTagline;
             document.getElementById('langToggle').textContent = t.langButton;
+            document.getElementById('langToggle').setAttribute('aria-label', lang==='en'?'Translate homepage introduction into Tamil':'Display homepage introduction in English');
+            ['heroTitle','heroTagline'].forEach(id=>document.getElementById(id).setAttribute('lang',lang));
         }
 
         function toggleLang() {
@@ -1671,7 +1677,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const canvas = document.getElementById("wavy-canvas");
-            if (!canvas || typeof SimplexNoise === 'undefined') return;
+            if (!canvas || typeof SimplexNoise === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
             const ctx = canvas.getContext("2d");
             const noise = new SimplexNoise();
