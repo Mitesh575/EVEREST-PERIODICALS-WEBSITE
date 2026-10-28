@@ -15,7 +15,7 @@ assert len(pages)==7, len(pages)
 for p in pages:
  raw=p.read_text(encoding='utf-8');h=H();h.feed(raw)
  assert h.tags.count('h1')==1,p
- assert '<link rel="canonical"' in raw,p
+ assert re.search(r'<link\\s+rel=["\']canonical["\']',raw),p
  assert '<meta name="description"' in raw or 'name="description"' in raw,p
  assert len(h.ids)==len(set(h.ids)),p
  for i,t in h.fields:
